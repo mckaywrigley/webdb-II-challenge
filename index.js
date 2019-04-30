@@ -45,7 +45,17 @@ server.get("/api/zoos", (req, res) => {
     });
 });
 
-server.get("/api/zoos/:id", (req, res) => {});
+server.get("/api/zoos/:id", (req, res) => {
+  const { id } = req.params;
+  db("zoos")
+    .where({ id })
+    .then(zoo => {
+      res.status(200).json(zoo);
+    })
+    .catch(err => {
+      res.status(404).json({ error: "Could not find that zoo." });
+    });
+});
 
 server.delete("/api/zoos/:id", (req, res) => {});
 
