@@ -18,7 +18,22 @@ server.use(express.json());
 server.use(helmet());
 
 // endpoints here
-server.post("/api/zoos", (req, res) => {});
+server.post("/api/zoos", (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    res.status(400).json({ error: "Please provide a name for the zoo." });
+  }
+  db("zoos")
+    .insert(req.body)
+    .then(zoo => {
+      res.status(201).json(zoo);
+    })
+    .catch(err => {
+      res
+        .status(400)
+        .json({ error: "The zoo could not be saved to the database." });
+    });
+});
 
 server.get("/api/zoos", (req, res) => {
   db("zoos")
@@ -26,7 +41,7 @@ server.get("/api/zoos", (req, res) => {
       res.status(200).json(zoos);
     })
     .catch(err => {
-      res.status(400).json({ error: "Could not find zoos." });
+      res.status(404).json({ error: "Could not find zoos." });
     });
 });
 
