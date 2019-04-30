@@ -57,7 +57,18 @@ server.get("/api/zoos/:id", (req, res) => {
     });
 });
 
-server.delete("/api/zoos/:id", (req, res) => {});
+server.delete("/api/zoos/:id", (req, res) => {
+  const { id } = req.params;
+  db("zoos")
+    .where({ id })
+    .del()
+    .then(zoo => {
+      res.status(204).json(count);
+    })
+    .catch(err => {
+      res.status(404).json({ error: "Could not delete the zoo with that id." });
+    });
+});
 
 server.put("/api/zoos/:id", (req, res) => {
   const { id } = req.params;
