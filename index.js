@@ -59,7 +59,18 @@ server.get("/api/zoos/:id", (req, res) => {
 
 server.delete("/api/zoos/:id", (req, res) => {});
 
-server.put("/api/zoos/:id", (req, res) => {});
+server.put("/api/zoos/:id", (req, res) => {
+  const { id } = req.params;
+  db("zoos")
+    .where({ id })
+    .update(req.body)
+    .then(zoo => {
+      res.status(200).json(zoo);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
 
 const port = 3300;
 server.listen(port, function() {
